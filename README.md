@@ -81,8 +81,7 @@ To further illustrate the importance of unified customer view such as customer 3
 
 **Entity resolution** involves running number of steps in sequential manner. Not doing so may result in different shopper id and household id assignments. Here is the flow diagram from raw PII data to generating shopper id hhid.
 
-
-[![image](https://github.com/user-attachments/assets/09d0e682-ac29-4bb8-ac1c-a4ae1b4f0f23)
+![image](https://github.com/user-attachments/assets/733a12bd-0748-4534-881f-5bebc1008893)
 
 
 ## Some of customer 360 Use Cases
