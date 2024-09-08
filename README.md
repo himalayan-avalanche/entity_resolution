@@ -1,150 +1,57 @@
 # Entity Resolution at Scale: Mapping 100+ million customer's account to customer identity
 
-### Abstract
+## Abstract
 
 Customer identity is at core of many businesses. This becomes very complex in presence of over 100 million customers, especially when most of Personally Identifiable Information (PII) are missing or have invalid values. At Albertsons, we use PII info along with engagement data, item level transactions, payments, and third party data to map customer accounts at both individual shopper and household levels. We develop various methodologies1 and pipelines for data processing , feature engineering, predictive modeling, id elevation and stamping. These algorithms are scalable and quite robust in the sense that the generated shopper id (customer level mapping) i) uniquely maps to individual customer, ii) is time invariant, iii) is invariant to customer’s additional accounts, and iv) invariant to updated PII at a future point in time. Model is packaged as python package and deployed in production. The analysis of about 100+ million card numbers shows reduction of approximately 9% from customers accounts to shopper id, and reduction of approximately 16% from customer accounts to household ids.
 
-Please refer this document for more details.
-
-https://github.com/ashwinimaurya/entity_resolution/blob/main/Albertsons_ID_Graph_Publix.pdf
-
 Corresponding author(s): Ashwini Maurya, akmaurya07@gmail.com
-
-
-
-
-
-
-
-
 {Ashwini Maurya, Albertsons Companies, akmaurya07@gmail.com}
 
-\fancyhead[RO, RE]{}
-
-
-
-
-
-{1.2}
-\raggedbottom
-
-
-
-\newpage 
-
-
-
-
-
-    
-
-
-
-
-\large
-    Ashwini Maurya}
-    
-\small
-   Albertsons Companies
-
-
-
-
-
-
-
-**Abstract**    
-
-
-{20pt}{20pt}
-\small \noindent Customer identity is at core of many businesses. This becomes very complex in presence of over 100 million customers, especially when most of Personally Identifiable Information (PII) are missing or have invalid values. At Albertsons, we use PII info along with engagement data, item level transactions, payments, and third party data to map customer accounts at both individual shopper and household levels. We develop various methodologies and pipelines for data processing , feature engineering, predictive modeling, id elevation and stamping. These algorithms are scalable and quite robust in the sense that the generated shopper id (customer level mapping) i) uniquely maps to individual customer, ii) is time invariant, iii) is invariant to customer's additional accounts, and iv) invariant to updated PII at a future point in time. Model is packaged as python package and deployed in production. The analysis of about 100+ million card numbers shows reduction of approximately 9\
-
-
-\newpage
-
-
-# Introduction and Scope
+## Introduction and Scope
 In north America, an individual usually engages with 4 devices on average (a significant increase from 2 devices in 2018). Among digitally engaged users, over 50
 \newline
 Moreover, the ecom users leave a rich trail of information such as cookies, browsing history, device info, ip address (location), clicks, likes of content or product they are engaging with. In addition, use of CRM software, subscription info, payments systems used in point of sale transactions (such as credit card info), first and third party delivery info (such as doordash, uber eats etc), social media data, customer surveys, and non PII data (such as transactions) adds to the complexity that makes it quite challenging for businesses when it comes to mapping these data points to customers data silos.
 
 
-[h]
-\centering
+![image](https://github.com/user-attachments/assets/a0c4f518-a15c-4ef7-a62f-c90d5055fe6b)
 
+***Entity Resolution** refers to process of stitching various customer info into single entity. The entity here can be an individual or a set of individual sharing certain PIIs or core attributes of the underlying set. For example in personalization such as music recommendations the entity could be an individual. An example of household level entity is where a group of individuals want to be put together in one entity such as to avail aggregated reward or loyalty points at household level. In a house, husband and wife are two different shoppers but they are part of same household. Consequently both husband and wife will have separate shopper ids but will have common household (unless they want to be put in different household). 
 
-
-
-
-
-\newline
-**Entity Resolution** refers to process of stitching various customer info into single entity. The entity here can be an individual or a set of individual sharing certain PIIs or core attributes of the underlying set. For example in personalization such as music recommendations the entity could be an individual. An example of household level entity is where a group of individuals want to be put together in one entity such as to avail aggregated reward or loyalty points at household level. In a house, husband and wife are two different shoppers but they are part of same household. Consequently both husband and wife will have separate shopper ids but will have common household (unless they want to be put in different household). 
-
-\newline
 Figure  gives an illustration of complexity in the entity resolution process. In this example, we know that first two records are same individual and third record is a different individual. Although this is an example of clean and complete data on all PII fields, it is often not the case in real data sets. In this example, all records share same first name. First and third record share same address whereas second and third record share same email address. The goal of entity resolution is to map first two records to same entity, and third record to a different entity.
 
-\newline 
 At Albertsons there are numerous IDs used across many applications. Some of these are described below.
 
-
-**UUID**:
-
-
+***UUID***:
 
 Universally Unique Identifier (UUIDs) are  128 character unique identifier. UUID follows specific structrue as defined in  {RFC 4122}.
 
-
-
-
-**GUID**:
-
-
+***GUID***:
 
 Globally Uniquely Identifier are also 128 bit unique reference numbers generated by algorithms. There is no real difference between UUID and GUID except that GUIDs were originally used by Microsoft for the Windows O/S. 
 
-
-
-
 **Club Card**:
-
-
 
 Albertsons club card number is assigned to customers at time of account sign up.
 
-
-
-
-**Household ID**:
-
-
+***Household ID***:
 
 A household level ID is assigned to a household that maps one or more individuals to a household id. There are instances when individuals in same household want to be assigned to have different hoousehold id assignements within Albertsons ecosystem. Such an altercation in householding is often done via Albertsons call center calls, which is time consuming, expensive and difficult to scale. 
 
-
-
-\noindent While all of these IDs may have some scope depending upon the use case, none of these IDs uniquely map to a customer. An ID mapping uniquely to a customer is of fundamental importance when it comes to personalization, marketing \& promotion, providing better customer service, early detection of churning customers among many. At Albertsons we refer these individual customer IDs as shopper IDs. As shopper IDs have many use cases, these IDs must have some nice properties that makes them easy to use across many systems, applications and over time. Below we list such desired properties of a good shopper id.
+While all of these IDs may have some scope depending upon the use case, none of these IDs uniquely map to a customer. An ID mapping uniquely to a customer is of fundamental importance when it comes to personalization, marketing \& promotion, providing better customer service, early detection of churning customers among many. At Albertsons we refer these individual customer IDs as shopper IDs. As shopper IDs have many use cases, these IDs must have some nice properties that makes them easy to use across many systems, applications and over time. Below we list such desired properties of a good shopper id.
 
 ##  Properties of a good Entity ID
 
 We may refer these as oracle properties of good entity id. These properties are applicable to broader context of Entity IDs ( outside the scope of this paper and Albertsons companies ecosystem). 
 
-
-
-
-    \item Each Entity ID should uniquely map to an individual customer (or set of individual when entity is group of individuals).
-    \item Entity ID  should be time invariant, i.e. it does not change over time.
-    \item Entity ID  should be invariant to customer getting new club cards. In this case new card should be assigned the same entity id as the original one. 
-    \item Entity ID should be invariant to customer's updated PII at later point of time.     
-
-
+i. Each Entity ID should uniquely map to an individual customer (or set of individual when entity is group of individuals).
+ii. Entity ID  should be time invariant, i.e. it does not change over time.
+iii. Entity ID  should be invariant to customer getting new club cards. In this case new card should be assigned the same entity id as the original one. 
+iv. Entity ID should be invariant to customer's updated PII at later point of time.     
 
 At Albertsons we developed the entity IDs that satisfy all of the properties outlined above. 
 
-\newpage
-
-
-# Entity Resolution as building block of customer 360
-**Entity Resolution** is key element in building customer 360. Customer 360 is single and comprehensive view of customer's info and their journey (that can happen through various channels), their engagement through various products and services. Customer 360 can also be thought of providing the following views of customers at one place:
+## Entity Resolution as building block of customer 360
+***Entity Resolution*** is key element in building customer 360. Customer 360 is single and comprehensive view of customer's info and their journey (that can happen through various channels), their engagement through various products and services. Customer 360 can also be thought of providing the following views of customers at one place:
 
 \newline
 **Who are they?** \indent \indent 
