@@ -136,7 +136,7 @@ For business of any size, higher churn rates can have devastating effect on its 
 Above I have highlighted few of important use cases focusing on customer experience, digital growth, brand building, persoanlizaton and customer retention. Some of other use cases that business can benefit from customer 360 are aiding in regularity compliance and data security, leveraging unified data to build better products, making easier for many business and data science professionals within company to enhance their productively, among others.
 
 
-## In House ID Graph's Performance to Live Ramp's ID Graph
+## Albertsons ID Graph's Performance to Live Ramp's ID Graph
 {LiveRamp} is a data collaboration platform. Liveramp takes Albertsons PII data as input to their ID graph framework so called {"Portrait Engine"} to generate portrait ID. A portrait ID is synonymous to shopper id in scope as both of these map to individual customers. In the past, Liveramp has used their earlier ID graph engine called {Abilitec graph} (uses deterministic matching algorithm) to provide clink and hlink. Clinks and hlinks map to customer level id and household level IDs respectively. 
 To measure the effectiveness of the in house built (Albertsons) ID graph output to LiveRamp's ID graph outputs, we compute the {accuracy}, {precision score}, {recall score}, {area under roc curve}. 
 
