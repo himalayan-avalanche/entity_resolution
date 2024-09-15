@@ -103,23 +103,8 @@ The core of a great marketing strategy is to promote the brand/product through a
 
 The Albertsons companies spend \$498 million in advertising cost being lowest among some top grocery retailers. 
 
+<img width="775" alt="image" src="https://github.com/user-attachments/assets/e8b748ad-617a-4008-8b1e-d345775f6186">
 
-{Top Grocery Retailer's Revenue and Ads Budget (US, 2022)}  
- {||c c c c||} 
- \hline
- Retailer & Revenue & Ads Budget & Revenue per \\ [0.8ex] 
- {} & (billion \$)} & (billion \$) & \$ ad spend \\ [0.7ex] 
- \hline\hline
- Albertsons & 77.65 & 0.50 & 155.92 \\ 
- \hline
- Amazon & 514 & 20.6 & 24.95 \\
- \hline
- Costco & 227 & - & - \\
- \hline
- Kroger & 148 & 1.03 & 143.69 \\
- \hline
- Walmart & 567 & 3.90 & 145.38 \\ [1ex] 
- \hline
 
 
 
